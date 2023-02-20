@@ -6,17 +6,18 @@
 //
 
 import UIKit
+import CoreData
 
 class TableViewController: UITableViewController {
     
-    var tasks: [String] = []
+    var tasks: [Task] = []
 
     @IBAction func saveTask(_ sender: UIBarButtonItem) {
         let alertController = UIAlertController(title: "New Task", message: "Please add a new task", preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "Save", style: .default) { action in
             let tf = alertController.textFields?.first
-            if let newTask = tf?.text {
-                self.tasks.insert(newTask, at: 0)
+            if let newTaskTitle = tf?.text {
+                self.saveTask(withTitle: newTaskTitle)
                 self.tableView.reloadData()
             }
         }
@@ -25,6 +26,19 @@ class TableViewController: UITableViewController {
         alertController.addAction(saveAction)
         alertController.addAction(cancelAction)
         present(alertController, animated: true)
+    }
+    
+    private func saveTask(withTitle title: String){
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.viewContext
+        guard let entity = NSEntityDescription.entity(forEntityName: "Task", in: context) else { return }
+        let taskObject = Task(entity: entity, insertInto: context)
+        taskObject.title = title
+        do{
+            try context.save()
+        } catch let error as NSError {
+            print(error.localizedDescription)
+        }
     }
     
     override func viewDidLoad() {
@@ -53,7 +67,7 @@ class TableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
 
-        cell.textLabel?.text = tasks[indexPath.row]
+        cell.textLabel?.text = tasks[indexPath.row].title
 
         return cell
     }

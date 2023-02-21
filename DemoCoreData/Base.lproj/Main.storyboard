@@ -31,6 +31,11 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="To-Do List" id="h4b-BQ-FeY">
+                        <barButtonItem key="leftBarButtonItem" style="done" systemItem="trash" id="xsA-j0-uDA">
+                            <connections>
+                                <action selector="deleteTasks:" destination="XYT-9t-1as" id="0Yc-Mj-Ib5"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" style="done" systemItem="add" id="Qdd-Ah-Jbk">
                             <connections>
                                 <action selector="saveTask:" destination="XYT-9t-1as" id="Kfz-Tf-3XM"/>
